@@ -4,6 +4,10 @@
 
 using namespace std;
 
+// Enum to represent choices
+enum Choice { ROCK = 1, PAPER, SCISSORS };
+
+// Arrays to store comments for different outcomes
 const string winningComments[] = {
     "Haha! Told you I'm the best!",
     "Too easy! Try harder next time.",
@@ -43,31 +47,35 @@ const string tieComments[] = {
     "Neither of us wants to lose!"
 };
 
-int getComputerChoice() {
-    return rand() % 3 + 1; 
+// Function to get the computer's choice
+Choice getComputerChoice() {
+    return static_cast<Choice>(rand() % 3 + 1);
 }
 
+// Function to display the choices to the user
 void displayChoices() {
     cout << "Choose an option:\n";
     cout << "1. Rock\n2. Paper\n3. Scissors\n";
 }
 
-void displayChoice(int choice) {
+// Function to display the chosen option
+void displayChoice(Choice choice) {
     switch (choice) {
-        case 1: cout << "Rock"; break;
-        case 2: cout << "Paper"; break;
-        case 3: cout << "Scissors"; break;
+        case ROCK: cout << "Rock"; break;
+        case PAPER: cout << "Paper"; break;
+        case SCISSORS: cout << "Scissors"; break;
         default: cout << "Invalid Choice"; break;
     }
 }
 
-void determineWinner(int userChoice, int computerChoice, int& userScore, int& computerScore, string& commentType) {
+// Function to determine the winner of the round
+void determineWinner(Choice userChoice, Choice computerChoice, int& userScore, int& computerScore, string& commentType) {
     if (userChoice == computerChoice) {
         cout << "It's a tie this round!" << endl;
         commentType = "tie";
-    } else if ((userChoice == 1 && computerChoice == 3) ||
-               (userChoice == 3 && computerChoice == 2) ||
-               (userChoice == 2 && computerChoice == 1)) {
+    } else if ((userChoice == ROCK && computerChoice == SCISSORS) ||
+               (userChoice == SCISSORS && computerChoice == PAPER) ||
+               (userChoice == PAPER && computerChoice == ROCK)) {
         cout << "You win this round!" << endl;
         userScore++;
         commentType = "losing";
@@ -78,6 +86,7 @@ void determineWinner(int userChoice, int computerChoice, int& userScore, int& co
     }
 }
 
+// Function to display a comment from the computer based on the outcome
 void displayComputerComment(const string& commentType) {
     int commentIndex = rand() % 10; 
     if (commentType == "winning") {
@@ -90,22 +99,26 @@ void displayComputerComment(const string& commentType) {
 }
 
 int main() {
-    srand(time(0)); 
-    int userChoice, computerChoice;
+    srand(time(0)); // Seed the random number generator
+    Choice userChoice, computerChoice;
     int userScore = 0, computerScore = 0;
     string commentType;
 
     cout << "Welcome to Rock, Paper, Scissors!" << endl;
     cout << "First to 5 points wins the game!" << endl;
 
+    // Main game loop
     while (userScore < 5 && computerScore < 5) {
         displayChoices();
 
+        // Get the user's choice
         while (true) {
+            int choice;
             cout << "Enter your choice (1-3): ";
-            cin >> userChoice;
+            cin >> choice;
+            userChoice = static_cast<Choice>(choice);
 
-            if (userChoice >= 1 && userChoice <= 3) {
+            if (userChoice >= ROCK && userChoice <= SCISSORS) {
                 break;
             } else {
                 cout << "Invalid choice. Please choose a number between 1 and 3." << endl;
@@ -132,6 +145,7 @@ int main() {
         cout << endl;
     }
 
+    // Display the final result
     if (userScore == 5) {
         cout << "Congratulations! You won the game!" << endl;
     } else {
